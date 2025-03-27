@@ -4,6 +4,7 @@ import Header from './hedaer';
 import Menu from './menu';
 import { useState } from 'react';
 import Postlist from './postlist';
+import Temp from './Temp';
 
 function App() {
   // ui 변경을 위한 상태값 먼저 정의 처음 기본상태 list
@@ -26,7 +27,8 @@ function App() {
   // 조건문으로 상태에따라 UI전환
   switch(mode){
     case "LIST": // 리스트목록으로 와서 나와야 하기때문에 컴포넌트를 여기에
-      content =  <Postlist postList={postList}></Postlist>
+      // content =  <Postlist postList={postList}></Postlist>
+      content = <postList postlist={postList}></postList>
       break;
     case "WRITE":
       content = <h2>글쓰기</h2>
@@ -42,14 +44,15 @@ function App() {
   // else if(mode === "WRITE"){
   //   content = <h2>글작성</h2>;
   // }
-
+  
 
   return ( // App리턴 
 
     <>
       <Header title='글목록' />
-    
+      {/*  */}
       <Menu menuList={menuList} onChange={(_mode)=>{ // 자식에게 줄 함수 정의하기 // onChange이름은 바꿔됌
+        // 
         setMode(_mode); // 받아올 함수 가져오기 
       }}></Menu>
 
@@ -60,3 +63,4 @@ function App() {
 }
 
 export default App;
+// 
