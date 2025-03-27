@@ -1,10 +1,9 @@
 export default function Postlist(props){
     const post = [];
     for(let p of props.postList){
-        const item = 
-        <> 
-            <a href="/" onClick={(e)=>{
+        const item = <> <a id={p.id} href="/" onClick={(e)=>{
                 e.preventDefault();
+                props.onSelect(e.target.id);
             }}>{p.title} (작성자:{p.writer})</a><hr/>
         </>
         post.push(item);

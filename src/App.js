@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Postlist from './postlist';
 import Temp from './Temp';
 import Write from './write';
+import Update from './update';
 
 function App() {
   // ui 변경을 위한 상태값 먼저 정의 처음 기본상태 list
@@ -15,16 +16,17 @@ function App() {
     { id: 2, title: "글목록", mode: "LIST" },
   ];
   
-  const [id, setId] = useState(0);
+  // const [id, setId] = useState(0);
   // 작성이 추가될때마다 배열에 추가
   const [postList, setPostlist] = useState([
     { id: 1, title: "반갑습니다", body: "Hello", writer: "김준홍" },
     { id: 2, title: "반가워여", body: "Hello", writer: "준홍" },
     { id: 3, title: "반갑", body: "Hello", writer: "김" },
   ]);
-  const [nextId, setNextid] = useState(postList.length + 1); // newPost 객체에 id 값 부여시키기 위한 state
+  const [id, setId] = useState(0);
+  const [nextId, setNextId] = useState(postList.length + 1); // newPost 객체에 id 값 부여시키기 위한 state
 
-
+  //1번이 문자열로들어감
 
 
   // 처음에는 빈 상태
@@ -33,22 +35,46 @@ function App() {
   switch (mode) {
     case "LIST": // 리스트목록으로 와서 나와야 하기때문에 컴포넌트를 여기에
       // content =  <Postlist postList={postList}></Postlist>
-      content = <Postlist postList={postList}></Postlist>
+      content = <Postlist postList={postList} onSelect={(_id)=>{
+        setId(Number(_id));
+        setMode("READ");
+      }} ></Postlist>
+      
       break;
 
     case "WRITE":
       content = <Write bt='작성하기' onSubmit={(_title,_body,_write) => {
         let newPost = {id: nextId, title:_title, body:_body, writer:_write}; // 객체구조. nextID = postList길이의 +1 (4), title = create컴포넌트에서 받은 값 body도 마찬가지
         // id 를 새롭게 누적하려면 state가 필요하다. 추가될때마다 id가 늘어야 하기 때문에
-        postList.push(newPost); // 새로운 객체를 기존 postList에 추가
-        let newPosted = [...postList]; // 기본 배열 객체를 새로운 변수에 저장
+        const num = postList.push(newPost); // 새로운 객체를 기존 postList에 추가
+        let newPosted = [...num]; // 기본 배열 객체를 새로운 변수에 저장
         setPostlist(newPosted); // 리랜더링 될 수 있게 새로운 값  넣기
-        setId(newPost.id); //
+        setId(nextId+1); //
         setMode("LIST");
       }}></Write>
       break;
 
     case "READ":
+      const read = postList.find((p)=>p.id === Number(id));
+      content =  <Update title={read.title}  body={read.body}
+        writer={read.writer} 
+        onUpdate={(title,body,writer)=>{
+        const updatePost = {id:id, title, body, writer};
+        for(let i=0; i<postList.length; i++){
+          if(postList[i].id===Number(id)){
+            postList[i] = updatePost
+            break;
+          }
+        }
+        const updateList = [...postList];
+        setPostlist(updateList);
+        setMode("LIST");
+
+      }}
+      onDelete={()=>{
+
+      }} ></Update>
+      
       break;
   }
 
